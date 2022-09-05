@@ -9,6 +9,7 @@ public class Factory extends Piece {
         super.setName("Factory");
         super.setScore(0);
         this.type = "Speacial";
+        
     }
     @Override
     public String getType() {

@@ -762,6 +762,10 @@ public class Board {
         return score;
     }
 
+    public boolean tileEmpty(String[] split) {
+        return board[Integer.parseInt(split[0])-1][Integer.parseInt(split[1])-1].getPiece().getName().equalsIgnoreCase("empty");
+    }
+
 
 
 
