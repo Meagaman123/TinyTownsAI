@@ -13,6 +13,11 @@ public class Piece {
         setName(name);
 
     }
+    public Piece(Piece other) {
+        this.letter = other.getLetter();
+        this.score = other.getScore();
+        this.name = other.getName();
+    }
     public String getLetter() {
         return letter;
     }

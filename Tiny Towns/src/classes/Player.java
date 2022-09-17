@@ -2,6 +2,7 @@ package classes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import classes.Piece.Piece;
 import classes.Piece.Buildings.Chapel;
@@ -19,6 +20,7 @@ public class Player {
     Board board;
     boolean playable;
     List<String> factoryResources = new ArrayList<>();
+    Random random = new Random();
 
     public Player(int playerNum) {
         this.playerNum = playerNum;
@@ -35,15 +37,71 @@ public class Player {
     }
 
     public void checkBoardPlayable() {
+        List<List<int[]>> listoflistsWell = board.canBuildWell();
+        List<List<int[]>> listoflistsTheatre = board.canBuildTheatre();
+        List<List<int[]>> listoflistsTavern = board.canBuildTavern();
+        List<List<int[]>> listoflistsCottage = board.canBuildCottage();
+        List<List<int[]>> listoflistsFarm = board.canBuildFarm();
+        List<List<int[]>> listoflistsChapel = board.canBuildChapel();
+        List<List<int[]>> listoflistsFactory = board.canBuildFactory();
         if (board.boardfull()) {
-            if (board.canBuildChapel().isEmpty() && board.canBuildCottage().isEmpty()
-                    && board.canBuildFactory().isEmpty() && board.canBuildFarm().isEmpty()
-                    && board.canBuildTavern().isEmpty() && board.canBuildTheatre().isEmpty()
-                    && board.canBuildWell().isEmpty()) {
+            if (listoflistsWell.isEmpty() && listoflistsTheatre.isEmpty() && listoflistsTavern.isEmpty() && listoflistsCottage.isEmpty() && listoflistsFarm.isEmpty() && listoflistsFactory.isEmpty() && listoflistsChapel.isEmpty()) {
                 this.playable = false;
+            } else {
+                if(!listoflistsWell.isEmpty()){
+                    forcebuild(listoflistsWell, "Well");
+                } else if(!listoflistsTheatre.isEmpty()){
+                    forcebuild(listoflistsTheatre, "Theatre");
+                } else if(!listoflistsTavern.isEmpty()){
+                    forcebuild(listoflistsTavern, "Tavern");
+                } else if(!listoflistsCottage.isEmpty()){
+                    forcebuild(listoflistsCottage, "Cottage");
+                } else if(!listoflistsFarm.isEmpty()){
+                    forcebuild(listoflistsFarm, "Farm");
+                } else if(!listoflistsChapel.isEmpty()){
+                    forcebuild(listoflistsChapel, "Chapel");
+                } else if(!listoflistsFactory.isEmpty()){
+                    forcebuild(listoflistsFactory, "Factory");
+                }
+                
             }
         }
 
+    }
+
+    private void forcebuild(List<List<int[]>> listoflists, String building) {
+        List<int[]> coordinatelist = listoflists.get(random.nextInt(listoflists.size()));
+        int[] coordinate = coordinatelist.get( random.nextInt(coordinatelist.size()));
+        for (int[] coord : coordinatelist) {
+            if (coordinate == coord) {
+                switch (building) {
+                    case "Chapel":
+                        board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Chapel());
+                        break;
+                    case "Cottage":
+                        board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Cottage());
+                        break;
+                    case "Factory":
+                        board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Factory());
+                        break;
+                    case "Farm":
+                        board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Farm());
+                        break;
+                    case "Tavern":
+                        board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Tavern());
+                        break;
+                    case "Theatre":
+                        board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Theatre());
+                        break;
+                    case "Well":
+                        board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Well());
+                        break;
+                }
+            } else {
+                board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Piece());
+            }
+        }
+    
     }
 
     public String choseResource(Scanner in) {
@@ -79,10 +137,10 @@ public class Player {
     }
 
     public void makeMove(String resource, Scanner in) {
-        if(factoryResources.contains(resource)){
+        if (factoryResources.contains(resource)) {
             resource = choseResource(in);
         }
-        int[] coordinates = calculateMove(in);
+        int[] coordinates = calculateMove(resource, in);
         switch (resource) {
             case "Brick":
                 board.setTilebyCoord(coordinates[0], coordinates[1], new Brick());
@@ -101,17 +159,19 @@ public class Player {
                 break;
         }
     }
+
     public Board getBoard() {
         return board;
     }
-    public int[] calculateMove(Scanner in) {
+
+    public int[] calculateMove(String resource, Scanner in) {
         System.out.println(board.toString());
         System.out.println("Player " + playerNum);
 
         return getCoordinates(in);
     }
 
-    private int[] getCoordinates(Scanner in) {
+    public int[] getCoordinates(Scanner in) {
         while (true) {
             int[] coordinates = new int[2];
             System.out.println("Which tile you would like to place it. [x,y]");
@@ -153,11 +213,12 @@ public class Player {
     }
 
     public void addResource(String resource) {
-        if(!factoryResources.contains(resource)){
+        if (!factoryResources.contains(resource)) {
             factoryResources.add(resource);
         }
     }
-    private static List<int[]> choseCordinatetoplace(List<List<int[]>> list, Scanner in) {
+
+    public List<int[]> choseCordinatetoplace(List<List<int[]>> list, Scanner in) {
         int i = 1;
         for (List<int[]> innerList : list) {
             System.out.print(i + ": ");
@@ -182,46 +243,45 @@ public class Player {
 
     }
 
-    public void calcuateBuildingMove(List<List<int[]>> listOfBuilding, String Building, Scanner in) {
+    public void calcuateBuildingMove(List<List<int[]>> listOfBuilding, String building, Scanner in) {
         List<int[]> buildingCoordinate = choseCordinatetoplace(listOfBuilding, in);
-        if (!buildingCoordinate.isEmpty()){
+        if (!buildingCoordinate.isEmpty()) {
             int[] coord = getCordinateBuilding(buildingCoordinate, in);
-             if (coord.length != 0) {
+            if (coord.length != 0) {
                 for (int[] coordinate : buildingCoordinate) {
                     if (coordinate == coord) {
-                        switch (Building) {
+                        switch (building) {
                             case "Chapel":
-                            board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Chapel());
-                            break;
+                                board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Chapel());
+                                break;
                             case "Cottage":
-                            board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Cottage());
-                            break;
+                                board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Cottage());
+                                break;
                             case "Factory":
-                            board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Factory());
-                            break;
+                                board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Factory());
+                                break;
                             case "Farm":
-                            board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Farm());
-                            break;
+                                board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Farm());
+                                break;
                             case "Tavern":
-                            board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Tavern());
-                            break;
+                                board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Tavern());
+                                break;
                             case "Theatre":
-                            board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Theatre());
-                            break;
+                                board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Theatre());
+                                break;
                             case "Well":
-                            board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Well());
-                            break;
+                                board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Well());
+                                break;
                         }
                     } else {
                         board.getTilebyCoord(coordinate[0], coordinate[1]).setPiece(new Piece());
                     }
-
                 }
             }
         }
     }
 
-    private static int[] getCordinateBuilding(List<int[]> cordinatesList, Scanner in) {
+    public int[] getCordinateBuilding(List<int[]> cordinatesList, Scanner in) {
         String building = "";
         int i = 1;
         for (int[] array : cordinatesList) {
@@ -233,6 +293,7 @@ public class Player {
                     "Enter the number for the coordinate you want to build the Factory on");
             building = in.nextLine();
         }
+
         if (isInt(building)) {
             int buildingInt = Integer.parseInt(building);
             return cordinatesList.get(buildingInt - 1);

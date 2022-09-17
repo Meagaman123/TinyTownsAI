@@ -1,9 +1,18 @@
 package classes.Board;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import classes.Piece.Piece;
+import classes.Piece.Buildings.Chapel;
+import classes.Piece.Buildings.Cottage;
+import classes.Piece.Buildings.Factory;
+import classes.Piece.Buildings.Farm;
+import classes.Piece.Buildings.Tavern;
+import classes.Piece.Buildings.Theatre;
+import classes.Piece.Buildings.Well;
+import classes.Piece.Resources.*;
 
 public class Board {
     int score;
@@ -11,6 +20,16 @@ public class Board {
 
     public Board() {
         this.board = createBoard();
+    }
+
+    public Board(Board boards) {
+        Tile[][] matrixToCopy = boards.getBoard();
+        board = createBoard();
+        for (int i = 0; i < matrixToCopy.length; i++) {
+            for (int j = 0; j < matrixToCopy.length; j++) {
+                board[i][j].piece = new Piece(matrixToCopy[i][j].piece);
+            }
+        }
     }
 
     public Tile[][] getBoard() {
@@ -24,7 +43,6 @@ public class Board {
     public Tile getTilebyCoord(int x, int y) {
         return board[x][y];
     }
-    
 
     // use this function to create an empty board for a new player.
     public Tile[][] createBoard() {
@@ -51,7 +69,6 @@ public class Board {
 
         return sb.toString();
     }
-
 
     /*
      * This next section is the board checking for any wells that can be built using
@@ -311,7 +328,7 @@ public class Board {
                         List<int[]> singleList = new ArrayList<>();
                         singleList.add(start);
                         singleList.add(new int[] { coord[0], coord[1] });
-                        singleList.add(new int[] { coord[0] + 1, coord[1] + 1 });
+                        singleList.add(new int[] { coord[0] + 1, coord[1] });
                         listofCoord.add(singleList);
                     }
                 }
@@ -541,28 +558,28 @@ public class Board {
         for (int[] coord : adjecentTiles) {
             if (board[coord[0]][coord[1]].piece.getName().equals("stone")) {
                 if (coord[2] == -1 && inboard(coord[0] - 1)) {
-                    if (board[coord[0]-1][coord[1]].piece.getName().equals("stone")) {
-                        if(inboard(coord[0]-2)){
-                            if (board[coord[0]-2][coord[1]].piece.getName().equals("brick")) {
-                                if(inboard(coord[1]+1)){
-                                    if (board[coord[0]-2][coord[1]+1].piece.getName().equals("wood")) {
+                    if (board[coord[0] - 1][coord[1]].piece.getName().equals("stone")) {
+                        if (inboard(coord[0] - 2)) {
+                            if (board[coord[0] - 2][coord[1]].piece.getName().equals("brick")) {
+                                if (inboard(coord[1] + 1)) {
+                                    if (board[coord[0] - 2][coord[1] + 1].piece.getName().equals("wood")) {
                                         List<int[]> singleList = new ArrayList<>();
                                         singleList.add(start);
                                         singleList.add(new int[] { coord[0], coord[1] });
-                                        singleList.add(new int[] { coord[0]-1, coord[1]  });
-                                        singleList.add(new int[] { coord[0] -2 , coord[1] });
-                                        singleList.add(new int[] { coord[0] -2 , coord[1] + 1 });
+                                        singleList.add(new int[] { coord[0] - 1, coord[1] });
+                                        singleList.add(new int[] { coord[0] - 2, coord[1] });
+                                        singleList.add(new int[] { coord[0] - 2, coord[1] + 1 });
                                         listofCoord.add(singleList);
                                     }
                                 }
-                                if(inboard(coord[1]-1)){
-                                    if (board[coord[0]-2][coord[1]-1].piece.getName().equals("wood")) {
+                                if (inboard(coord[1] - 1)) {
+                                    if (board[coord[0] - 2][coord[1] - 1].piece.getName().equals("wood")) {
                                         List<int[]> singleList = new ArrayList<>();
                                         singleList.add(start);
                                         singleList.add(new int[] { coord[0], coord[1] });
-                                        singleList.add(new int[] { coord[0]-1, coord[1]});
-                                        singleList.add(new int[] { coord[0]-2, coord[1]});
-                                        singleList.add(new int[] { coord[0] -2, coord[1] - 1 });
+                                        singleList.add(new int[] { coord[0] - 1, coord[1] });
+                                        singleList.add(new int[] { coord[0] - 2, coord[1] });
+                                        singleList.add(new int[] { coord[0] - 2, coord[1] - 1 });
                                         listofCoord.add(singleList);
                                     }
                                 }
@@ -571,28 +588,28 @@ public class Board {
                     }
                 }
                 if (coord[2] == 0 && inboard(coord[0] + 1)) {
-                    if (board[coord[0]+1][coord[1]].piece.getName().equals("stone")) {
-                        if(inboard(coord[0]+2)){
-                            if (board[coord[0]+2][coord[1]].piece.getName().equals("brick")) {
-                                if(inboard(coord[1]+1)){
-                                    if (board[coord[0]+2][coord[1]+1].piece.getName().equals("wood")) {
+                    if (board[coord[0] + 1][coord[1]].piece.getName().equals("stone")) {
+                        if (inboard(coord[0] + 2)) {
+                            if (board[coord[0] + 2][coord[1]].piece.getName().equals("brick")) {
+                                if (inboard(coord[1] + 1)) {
+                                    if (board[coord[0] + 2][coord[1] + 1].piece.getName().equals("wood")) {
                                         List<int[]> singleList = new ArrayList<>();
                                         singleList.add(start);
                                         singleList.add(new int[] { coord[0], coord[1] });
-                                        singleList.add(new int[] { coord[0]+1, coord[1]  });
-                                        singleList.add(new int[] { coord[0] +2 , coord[1] });
-                                        singleList.add(new int[] { coord[0] +2 , coord[1] + 1 });
+                                        singleList.add(new int[] { coord[0] + 1, coord[1] });
+                                        singleList.add(new int[] { coord[0] + 2, coord[1] });
+                                        singleList.add(new int[] { coord[0] + 2, coord[1] + 1 });
                                         listofCoord.add(singleList);
                                     }
                                 }
-                                if(inboard(coord[1]-1)){
-                                    if (board[coord[0]+2][coord[1]-1].piece.getName().equals("wood")) {
+                                if (inboard(coord[1] - 1)) {
+                                    if (board[coord[0] + 2][coord[1] - 1].piece.getName().equals("wood")) {
                                         List<int[]> singleList = new ArrayList<>();
                                         singleList.add(start);
                                         singleList.add(new int[] { coord[0], coord[1] });
-                                        singleList.add(new int[] { coord[0]+1, coord[1]});
-                                        singleList.add(new int[] { coord[0]+2, coord[1]});
-                                        singleList.add(new int[] { coord[0] +2, coord[1] - 1 });
+                                        singleList.add(new int[] { coord[0] + 1, coord[1] });
+                                        singleList.add(new int[] { coord[0] + 2, coord[1] });
+                                        singleList.add(new int[] { coord[0] + 2, coord[1] - 1 });
                                         listofCoord.add(singleList);
                                     }
                                 }
@@ -601,28 +618,28 @@ public class Board {
                     }
                 }
                 if (coord[2] == 1 && inboard(coord[1] - 1)) {
-                    if (board[coord[0]][coord[1]-1].piece.getName().equals("stone")) {
-                        if(inboard(coord[1]-2)){
-                            if (board[coord[0]][coord[1]-2].piece.getName().equals("brick")) {
-                                if(inboard(coord[0]+1)){
-                                    if (board[coord[0]+1][coord[1]-2].piece.getName().equals("wood")) {
+                    if (board[coord[0]][coord[1] - 1].piece.getName().equals("stone")) {
+                        if (inboard(coord[1] - 2)) {
+                            if (board[coord[0]][coord[1] - 2].piece.getName().equals("brick")) {
+                                if (inboard(coord[0] + 1)) {
+                                    if (board[coord[0] + 1][coord[1] - 2].piece.getName().equals("wood")) {
                                         List<int[]> singleList = new ArrayList<>();
                                         singleList.add(start);
                                         singleList.add(new int[] { coord[0], coord[1] });
-                                        singleList.add(new int[] { coord[0], coord[1]-1  });
-                                        singleList.add(new int[] { coord[0] , coord[1]-2 });
-                                        singleList.add(new int[] { coord[0] +1 , coord[1] -2 });
+                                        singleList.add(new int[] { coord[0], coord[1] - 1 });
+                                        singleList.add(new int[] { coord[0], coord[1] - 2 });
+                                        singleList.add(new int[] { coord[0] + 1, coord[1] - 2 });
                                         listofCoord.add(singleList);
                                     }
                                 }
-                                if(inboard(coord[0]-1)){
-                                    if (board[coord[0]-1][coord[1]-2].piece.getName().equals("wood")) {
+                                if (inboard(coord[0] - 1)) {
+                                    if (board[coord[0] - 1][coord[1] - 2].piece.getName().equals("wood")) {
                                         List<int[]> singleList = new ArrayList<>();
                                         singleList.add(start);
                                         singleList.add(new int[] { coord[0], coord[1] });
-                                        singleList.add(new int[] { coord[0], coord[1]-1});
-                                        singleList.add(new int[] { coord[0], coord[1]-2});
-                                        singleList.add(new int[] { coord[0] -1, coord[1] - 2 });
+                                        singleList.add(new int[] { coord[0], coord[1] - 1 });
+                                        singleList.add(new int[] { coord[0], coord[1] - 2 });
+                                        singleList.add(new int[] { coord[0] - 1, coord[1] - 2 });
                                         listofCoord.add(singleList);
                                     }
                                 }
@@ -631,28 +648,28 @@ public class Board {
                     }
                 }
                 if (coord[2] == 2 && inboard(coord[1] + 1)) {
-                    if (board[coord[0]][coord[1]+1].piece.getName().equals("stone")) {
-                        if(inboard(coord[1]+2)){
-                            if (board[coord[0]][coord[1]+2].piece.getName().equals("brick")) {
-                                if(inboard(coord[0]+1)){
-                                    if (board[coord[0]+1][coord[1]+2].piece.getName().equals("wood")) {
+                    if (board[coord[0]][coord[1] + 1].piece.getName().equals("stone")) {
+                        if (inboard(coord[1] + 2)) {
+                            if (board[coord[0]][coord[1] + 2].piece.getName().equals("brick")) {
+                                if (inboard(coord[0] + 1)) {
+                                    if (board[coord[0] + 1][coord[1] + 2].piece.getName().equals("wood")) {
                                         List<int[]> singleList = new ArrayList<>();
                                         singleList.add(start);
                                         singleList.add(new int[] { coord[0], coord[1] });
-                                        singleList.add(new int[] { coord[0], coord[1] +1 });
-                                        singleList.add(new int[] { coord[0] , coord[1] +2});
-                                        singleList.add(new int[] { coord[0] +1 , coord[1] + 2 });
+                                        singleList.add(new int[] { coord[0], coord[1] + 1 });
+                                        singleList.add(new int[] { coord[0], coord[1] + 2 });
+                                        singleList.add(new int[] { coord[0] + 1, coord[1] + 2 });
                                         listofCoord.add(singleList);
                                     }
                                 }
-                                if(inboard(coord[0]-1)){
-                                    if (board[coord[0]-1][coord[1]+2].piece.getName().equals("wood")) {
+                                if (inboard(coord[0] - 1)) {
+                                    if (board[coord[0] - 1][coord[1] + 2].piece.getName().equals("wood")) {
                                         List<int[]> singleList = new ArrayList<>();
                                         singleList.add(start);
                                         singleList.add(new int[] { coord[0], coord[1] });
-                                        singleList.add(new int[] { coord[0], coord[1]+1});
-                                        singleList.add(new int[] { coord[0], coord[1]+2});
-                                        singleList.add(new int[] { coord[0] -1, coord[1] + 2 });
+                                        singleList.add(new int[] { coord[0], coord[1] + 1 });
+                                        singleList.add(new int[] { coord[0], coord[1] + 2 });
+                                        singleList.add(new int[] { coord[0] - 1, coord[1] + 2 });
                                         listofCoord.add(singleList);
                                     }
                                 }
@@ -699,9 +716,9 @@ public class Board {
     }
 
     public boolean boardfull() {
-        for(int y = 0; y<board.length; y++){
-            for(int x = 0; x<board.length; x++){
-                if(board[x][y].piece.getName().equalsIgnoreCase("empty")){
+        for (int y = 0; y < board.length; y++) {
+            for (int x = 0; x < board.length; x++) {
+                if (board[x][y].piece.getName().equalsIgnoreCase("empty")) {
                     return false;
                 }
             }
@@ -709,7 +726,7 @@ public class Board {
         return true;
     }
 
-    public int calculateScore(){
+    public int calculateScore() {
         int score = 0;
         int numberofCottages = 0;
         int numberofChapels = 0;
@@ -717,56 +734,123 @@ public class Board {
         int food = 0;
         for (Tile[] tiles : board) {
             for (Tile tile : tiles) {
-                if(Character.isLowerCase(tile.piece.getLetter().charAt(0))){
+                if (Character.isLowerCase(tile.piece.getName().charAt(0))) {
                     score--;
-                } else if (tile.piece.getName().equals("Cottage")){
+                } else if (tile.piece.getName().equals("Cottage")) {
                     numberofCottages++;
-                } else if (tile.piece.getName().equals("Farm")){
+                } else if (tile.piece.getName().equals("Farm")) {
                     food = food + 4;
-                }else if (tile.piece.getName().equals("Chapel")){
+                } else if (tile.piece.getName().equals("Chapel")) {
                     numberofChapels++;
-                }else if (tile.piece.getName().equals("Well")){
-                    List<int[]> adjecenTiles = adjecentTiles(new int[] { tile.x, tile.y});
+                } else if (tile.piece.getName().equals("Well")) {
+                    List<int[]> adjecenTiles = adjecentTiles(new int[] { tile.x, tile.y });
                     for (int[] coordinates : adjecenTiles) {
-                        if(board[coordinates[0]][coordinates[1]].getPiece().getName().equals("Cottage")){
+                        if (board[coordinates[0]][coordinates[1]].getPiece().getName().equals("Cottage")) {
                             score++;
                         }
                     }
-                }else if (tile.piece.getName().equals("Theatre")){
+                } else if (tile.piece.getName().equals("Theatre")) {
                     List<String> types = new ArrayList<>();
                     for (int i = 0; i < tiles.length; i++) {
-                        if(types.contains(board[tile.x][i].piece.getType()) && board[tile.x][i].piece.getType() != null){
+                        if (types.contains(board[tile.x][i].piece.getType())
+                                && board[tile.x][i].piece.getType() != null) {
                             score++;
                             types.add(board[tile.x][i].piece.getType());
                         }
-                        if(types.contains(board[i][tile.y].piece.getType()) && board[i][tile.y].piece.getType() != null){
+                        if (types.contains(board[i][tile.y].piece.getType())
+                                && board[i][tile.y].piece.getType() != null) {
                             score++;
                             types.add(board[i][tile.y].piece.getType());
                         }
                     }
-                }else if (tile.piece.getName().equals("Tavern") && numberofTavern!=5){
-                        numberofTavern++;
-                        score = numberofTavern+1;           
+                } else if (tile.piece.getName().equals("Tavern") && numberofTavern != 5) {
+                    numberofTavern++;
+                    score += (numberofTavern + 1);
                 }
             }
         }
-        int fedcottages = numberofCottages-food;
-        if(fedcottages<0){
+        int fedcottages = numberofCottages - food;
+        if (fedcottages < 0) {
             fedcottages = numberofCottages;
-        }else{
+        } else {
             fedcottages = food;
         }
-        score += (fedcottages*3);
-        score += (numberofChapels*fedcottages);
+        score += (fedcottages * 3);
+        score += (numberofChapels * fedcottages);
 
         return score;
     }
 
     public boolean tileEmpty(String[] split) {
-        return board[Integer.parseInt(split[0])-1][Integer.parseInt(split[1])-1].getPiece().getName().equalsIgnoreCase("empty");
+        return board[Integer.parseInt(split[0]) - 1][Integer.parseInt(split[1]) - 1].getPiece().getName()
+                .equalsIgnoreCase("empty");
     }
 
+    public ArrayList<int[]> generateMoves() {
+        ArrayList<int[]> moves = new ArrayList<>();
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < board.length; y++) {
+                if (tileEmpty(x, y)) {
+                    moves.add(new int[] { x, y });
+                }
+            }
+        }
+        return moves;
+    }
 
+    public boolean tileEmpty(int x, int y) {
+        return board[x][y].getPiece().getName().equalsIgnoreCase("empty");
+    }
 
+    public void placeResource(int i, int j, String resource) {
+        switch (resource) {
+            case "Brick":
+                board[i][j].setPiece(new Brick());
+                break;
+            case "Glass":
+                board[i][j].setPiece(new Glass());
+                break;
+            case "Wheat":
+                board[i][j].setPiece(new Wheat());
+                break;
+            case "Wood":
+                board[i][j].setPiece(new Wood());
+                break;
+            case "Stone":
+                board[i][j].setPiece(new Stone());
+                break;
+        }
+    }
 
+    public void placeBuilding(int x, int y, List<int[]> list, String building) {
+        for (int[] is : list) {
+            if (x == is[0] && y == is[1]) {
+                switch (building) {
+                    case "Chapel":
+                        board[x][y].setPiece(new Chapel());
+                        break;
+                    case "Cottage":
+                        board[x][y].setPiece(new Cottage());
+                        break;
+                    case "Factory":
+                        board[x][y].setPiece(new Factory());
+                        break;
+                    case "Farm":
+                        board[x][y].setPiece(new Farm());
+                        break;
+                    case "Tavern":
+                        board[x][y].setPiece(new Tavern());
+                        break;
+                    case "Theatre":
+                        board[x][y].setPiece(new Theatre());
+                        break;
+                    case "Well":
+                        board[x][y].setPiece(new Well());
+                        break;
+                }
+            }else {
+                board[x][y].setPiece(new Piece());
+            }
+        }
+}
 }

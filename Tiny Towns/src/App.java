@@ -1,4 +1,7 @@
+import classes.Ai;
 import classes.Player;
+import classes.RandomBot;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,6 +10,8 @@ public class App {
         // Declare varibles for number of players and create a array to store each
         // player
         int numOfPlayer = 2;
+        int numOfAI = 1;
+        int numOfrandbot = 1;
         Player[] players = new Player[numOfPlayer];
         String resource = null;
         // Create a scanner obj to get user input
@@ -14,8 +19,17 @@ public class App {
 
         // creates a new game with 4 players
         for (int i = 0; i < numOfPlayer; i++) {
-            players[i] = new Player(i + 1);
+            if(numOfAI > 0){
+                players[i] = new Ai(i + 1);
+                numOfAI--;
+            }else if (numOfrandbot > 0){
+                players[i] = new RandomBot(i + 1);
+                numOfAI--;
+            }else{
+                players[i] = new Player(i + 1);
+            }
             System.out.println("Created player " + players[i].getPlayerNum());
+
         }
 
         // Start the game keep looping through each player until no more moves are
@@ -81,7 +95,9 @@ public class App {
         }
 
         for (Player player : players) {
-            System.out.println("you score is " + player.getBoard().calculateScore());
+            
+            System.out.println(player.getBoard().toString() + "\n" +"Player: " + player.getPlayerNum() +  "\n" + "you score is " + player.getBoard().calculateScore());
+
         }
     }
 
